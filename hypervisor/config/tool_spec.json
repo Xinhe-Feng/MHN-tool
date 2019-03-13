@@ -1,0 +1,31 @@
+{
+	 "tool3":{
+		 "nic":"enp5s0f0",
+	         "config":{
+			 "serviceName":"mhn",
+			 "cpus":5,
+			 "gpus":0,
+			 "memory":2014,
+			 "nicPassthru":false,
+			 "platform":"VM",
+			 "force":"2",
+			 "toolIp":"10.100.6.12"
+		 },
+		 "serviceConfig":{
+			 "debug": "False",
+			 "email": "xinhe.feng@bigswitch.com",
+			 "password": "bsn",
+			 "serverBaseUrl": "10.5.0.43",
+			 "honeymapUrl": "10.5.0.43",
+			 "mailServer": "10.5.0.43",
+			 "mailPort": "",
+			 "mailTLS": "No",
+			 "mailSSL": "No",
+			 "mailUsername": "",
+			 "mailPassword": "",
+			 "defaultMailSender": "",
+			 "logFilePath": "/var/log/mhn/mhn.log"
+		 }
+	 }
+
+}
