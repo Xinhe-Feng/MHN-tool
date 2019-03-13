@@ -48,9 +48,6 @@ if [ -f /etc/debian_version ]; then
 #    apt-get update && apt-get upgrade -y
     apt-get install -y python-pip
     pip install --upgrade pip
-    #export LANGUAGE=en_US.UTF-8
-    #export LANG=en_US.UTF-8
-    #sudo locale-gen en_US.UTF-8
     sudo pip install celery
 fi
 
@@ -75,4 +72,3 @@ chown $WWW_OWNER /var/log/mhn/mhn.log
 supervisorctl restart mhn-celery-worker
 
 echo "[`date`] Completed Installation of all MHN packages"
-

@@ -42,18 +42,21 @@ class Mhn:
             service_config = config[CKEY.SERVICE_CONFIG]
             vm_conn.writeRemoteJsonFile(service_config, "./mhn/server/mhn_spec.json")
     
-            command = "export LANGUAGE=en_US.UTF-8"
+            #command = "export LANGUAGE=en_US.UTF-8"
+            #vm_conn.runCommandOverSSH(command)
+
+            #command = "export LANG=en_US.UTF-8"
+            #vm_conn.runCommandOverSSH(command)
+
+           # command = "export LC_ALL=en_US.UTF-8"
+           # vm_conn.runCommandOverSSH(command)
+
+           # command = "sudo locale-gen en_US.UTF-8"
+           # vm_conn.runCommandOverSSH(command)
+           
+            command = "export LC_ALL=C"
             vm_conn.runCommandOverSSH(command)
 
-            command = "export LANG=en_US.UTF-8"
-            vm_conn.runCommandOverSSH(command)
-
-            command = "export LC_ALL=en_US.UTF-8"
-            vm_conn.runCommandOverSSH(command)
-
-            command = "sudo locale-gen en_US.UTF-8"
-            vm_conn.runCommandOverSSH(command)
-            
             #command = "sudo pip install celery"
             #vm_conn.runCommandOverSSH(command)
 

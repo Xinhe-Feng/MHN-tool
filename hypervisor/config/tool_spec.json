@@ -8,7 +8,7 @@
 			 "memory":2014,
 			 "nicPassthru":false,
 			 "platform":"VM",
-			 "force":"2",
+			 "force":"4",
 			 "toolIp":"10.100.6.12"
 		 },
 		 "serviceConfig":{
@@ -17,7 +17,7 @@
 			 "password": "bsn",
 			 "serverBaseUrl": "10.5.0.43",
 			 "honeymapUrl": "10.5.0.43",
-			 "mailServer": "10.5.0.43",
+			 "mailServer": "",
 			 "mailPort": "",
 			 "mailTLS": "No",
 			 "mailSSL": "No",
