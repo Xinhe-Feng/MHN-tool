@@ -32,33 +32,24 @@ class Mhn:
             command = "mkdir mhn"
             vm_conn.runCommandOverSSH(command)
             vm_conn.copyFile("%s/mhn.tar.gz" %(tools_dir), "mhn.tar.gz")
-
+            
             command = "tar -zxvf mhn.tar.gz"
             vm_conn.runCommandOverSSH(command)
 
-            #command = "sudo chmod a+x mhn/install_mhn.sh"
-            #vm_conn.runCommandOverSSH(command)
+            vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(tools_dir), "mhn_sensors.tar.gz")
+            vm_conn.runCommandOverSSH(command)
+
+            command = "sudo tar -zxvf mhn_sensors.tar.gz -C /opt"
+            vm_conn.runCommandOverSSH(command)
+
+            command = "sudo cp -r /opt/mhn_sensors/. /opt"
+            vm_conn.runCommandOverSSH(command)
 
             service_config = config[CKEY.SERVICE_CONFIG]
             vm_conn.writeRemoteJsonFile(service_config, "./mhn/server/mhn_spec.json")
     
-            #command = "export LANGUAGE=en_US.UTF-8"
-            #vm_conn.runCommandOverSSH(command)
-
-            #command = "export LANG=en_US.UTF-8"
-            #vm_conn.runCommandOverSSH(command)
-
-           # command = "export LC_ALL=en_US.UTF-8"
-           # vm_conn.runCommandOverSSH(command)
-
-           # command = "sudo locale-gen en_US.UTF-8"
-           # vm_conn.runCommandOverSSH(command)
-           
             command = "export LC_ALL=C"
             vm_conn.runCommandOverSSH(command)
-
-            #command = "sudo pip install celery"
-            #vm_conn.runCommandOverSSH(command)
 
             command = "sudo ./mhn/install_mhn.sh"
             outdata, error = vm_conn.runCommandOverSSH(command)

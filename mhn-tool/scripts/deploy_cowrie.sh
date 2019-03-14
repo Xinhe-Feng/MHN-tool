@@ -27,7 +27,7 @@ pip install -U supervisor
 useradd -d /home/cowrie -s /bin/bash -m cowrie -g users
 
 cd /opt
-git clone https://github.com/micheloosterhof/cowrie.git cowrie
+#git clone https://github.com/micheloosterhof/cowrie.git cowrie
 
 # Config for requirements.txt
 cat > /opt/cowrie/requirements.txt <<EOF

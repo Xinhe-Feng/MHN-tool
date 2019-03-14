@@ -8,13 +8,13 @@
 			 "memory":2014,
 			 "nicPassthru":false,
 			 "platform":"VM",
-			 "force":"4",
+			 "force":"7",
 			 "toolIp":"10.100.6.12"
 		 },
 		 "serviceConfig":{
 			 "debug": "False",
 			 "email": "xinhe.feng@bigswitch.com",
-			 "password": "bsn",
+			 "password": "ben",
 			 "serverBaseUrl": "10.5.0.43",
 			 "honeymapUrl": "10.5.0.43",
 			 "mailServer": "",
