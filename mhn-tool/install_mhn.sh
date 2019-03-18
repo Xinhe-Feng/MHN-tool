@@ -46,8 +46,9 @@ fi
 
 if [ -f /etc/debian_version ]; then
 #    apt-get update && apt-get upgrade -y
-    apt-get install -y python-pip
-    pip install --upgrade pip
+#    apt-get install -y python-pip
+#    pip install --upgrade pip
+    pip install --upgrade setuptools
     sudo pip install celery
 fi
 

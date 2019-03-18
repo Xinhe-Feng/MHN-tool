@@ -64,7 +64,7 @@ update-rc.d -f  apache2 remove
 # Install glastopf
 pip install --upgrade pgen
 pip install --upgrade cython
-pip uninstall --yes setuptools
+#pip uninstall --yes setuptools
 #git clone https://github.com/mushorg/glastopf.git $GLASTOPF_HOME
 cd $GLASTOPF_HOME
 python setup.py install

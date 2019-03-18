@@ -27,25 +27,25 @@ pip install pyyaml
 
 # Install hpfeeds and required libs...
 
-cd /tmp
-rm -rf libev*
-wget https://github.com/threatstream/hpfeeds/releases/download/libev-4.15/libev-4.15.tar.gz
-tar zxvf libev-4.15.tar.gz 
-cd libev-4.15
-./configure && make && make install
-ldconfig
+#cd /tmp
+#rm -rf libev*
+#wget https://github.com/threatstream/hpfeeds/releases/download/libev-4.15/libev-4.15.tar.gz
+#tar zxvf libev-4.15.tar.gz 
+#cd libev-4.15
+#./configure && make && make install
+#ldconfig
+
+#cd /tmp
+#rm -rf hpfeeds
+#git clone https://github.com/threatstream/hpfeeds.git
+#cd hpfeeds/appsupport/libhpfeeds
+#autoreconf --install
+#./configure && make && make install 
+#ldconfig
 
 cd /tmp
-rm -rf hpfeeds
-git clone https://github.com/threatstream/hpfeeds.git
-cd hpfeeds/appsupport/libhpfeeds
-autoreconf --install
-./configure && make && make install 
-ldconfig
-
-cd /tmp
-rm -rf htp*
-wget https://github.com/ironbee/libhtp/releases/download/0.5.15/htp-0.5.15.tar.gz
+#rm -rf htp*
+#wget https://github.com/ironbee/libhtp/releases/download/0.5.15/htp-0.5.15.tar.gz
 tar -xzvf htp-0.5.15.tar.gz
 cd htp-0.5.15
 ./configure && make && make install
@@ -54,8 +54,8 @@ ldconfig
 mkdir -p /opt/suricata/etc/suricata/rules /opt/mhn/rules/
 
 cd /tmp
-rm -rf suricata
-git clone -b hpfeeds-support https://github.com/threatstream/suricata.git
+#rm -rf suricata
+#git clone -b hpfeeds-support https://github.com/threatstream/suricata.git
 cd suricata
 ./autogen.sh || ./autogen.sh
 export CPPFLAGS=-I/include

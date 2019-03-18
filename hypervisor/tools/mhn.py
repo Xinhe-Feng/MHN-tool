@@ -36,15 +36,23 @@ class Mhn:
             command = "tar -zxvf mhn.tar.gz"
             vm_conn.runCommandOverSSH(command)
 
-            vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(tools_dir), "mhn_sensors.tar.gz")
-            vm_conn.runCommandOverSSH(command)
+            #vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(tools_dir), "mhn_sensors.tar.gz")
 
-            command = "sudo tar -zxvf mhn_sensors.tar.gz -C /opt"
-            vm_conn.runCommandOverSSH(command)
+            #command = "sudo tar -zxvf mhn_sensors.tar.gz -C /opt"
+            #vm_conn.runCommandOverSSH(command)
 
-            command = "sudo cp -r /opt/mhn_sensors/. /opt"
-            vm_conn.runCommandOverSSH(command)
+            #command = "sudo cp -r /opt/mhn_sensors/. /opt"
+            #vm_conn.runCommandOverSSH(command)
 
+           # vm_conn.copyFile("%s/mhn_sensors_tmp.tar.gz" %(tools_dir), "mhn_sensors_tmp.tar.gz")
+           # vm_conn.runCommandOverSSH(command)
+
+            #command = "sudo tar -zxvf mhn_sensors_tmp.tar.gz -C /tmp"
+            #vm_conn.runCommandOverSSH(command)
+
+            #command = "sudo cp -r /opt/mhn_sensors_tmp/. /tmp"
+            #vm_conn.runCommandOverSSH(command)
+            
             service_config = config[CKEY.SERVICE_CONFIG]
             vm_conn.writeRemoteJsonFile(service_config, "./mhn/server/mhn_spec.json")
     
@@ -86,6 +94,23 @@ class Mhn:
            # command = "sudo pip install celery"
            # vm_conn.runCommandOverSSH(command)
             
+            vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(tools_dir), "mhn_sensors.tar.gz")
+           
+            command = "sudo tar -zxvf mhn_sensors.tar.gz -C /opt"
+            vm_conn.runCommandOverSSH(command)
+
+            command = "sudo cp -r /opt/mhn_sensors/. /opt"
+            vm_conn.runCommandOverSSH(command)
+            
+            
+            vm_conn.copyFile("%s/mhn_sensors_tmp.tar.gz" %(tools_dir), "mhn_sensors_tmp.tar.gz")
+            
+            command = "sudo tar -zxvf mhn_sensors_tmp.tar.gz -C /tmp"
+            vm_conn.runCommandOverSSH(command)
+            
+            command = "sudo cp -r /tmp/mhn_sensors_tmp/. /tmp"
+            vm_conn.runCommandOverSSH(command)
+           
             command = "sudo python mhn/deploy.py"
             outdata, error = vm_conn.runCommandOverSSH(command)
 
