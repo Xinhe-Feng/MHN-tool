@@ -29,7 +29,7 @@ sed -i '/HPFEEDS_.*/d' wordpot.conf
 sed -i "s/^HOST\s.*/HOST = '0.0.0.0'/" wordpot.conf
 
 # Register the sensor with the MHN server.
-wget $server_url/static/registration.txt -O registration.sh
+sudo cp ~/mhn/server/mhn/static/registration.txt registration.sh
 chmod 755 registration.sh
 # Note: this will export the HPF_* variables
 . ./registration.sh $server_url $deploy_key "wordpot"

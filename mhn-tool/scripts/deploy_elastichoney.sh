@@ -25,7 +25,7 @@ go get || true
 go build
 
 # Register the sensor with the MHN server.
-wget $server_url/static/registration.txt -O registration.sh
+sudo cp ~/mhn/server/mhn/static/registration.txt registration.sh
 chmod 755 registration.sh
 # Note: this will export the HPF_* variables
 . ./registration.sh $server_url $deploy_key "elastichoney"

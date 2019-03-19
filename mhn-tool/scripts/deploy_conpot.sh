@@ -28,7 +28,7 @@ pip install -e git+https://github.com/mushorg/conpot.git@Release_0.5.2#egg=conpo
 pip install -e git+https://github.com/mushorg/modbus-tk.git#egg=modbus-tk
 
 # Register sensor with MHN server.
-wget $server_url/static/registration.txt -O registration.sh
+sudo cp ~/mhn/server/mhn/static/registration.txt registration.sh
 chmod 755 registration.sh
 # Note: this will export the HPF_* variables
 . ./registration.sh $server_url $deploy_key "conpot"

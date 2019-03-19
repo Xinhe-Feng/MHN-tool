@@ -54,7 +54,7 @@ pip install csirtgsdk==0.0.0a6
 pip install -r requirements.txt 
 
 # Register sensor with MHN server.
-wget $server_url/static/registration.txt -O registration.sh
+sudo cp ~/mhn/server/mhn/static/registration.txt registration.sh
 chmod 755 registration.sh
 # Note: this will export the HPF_* variables
 . ./registration.sh $server_url $deploy_key "cowrie"

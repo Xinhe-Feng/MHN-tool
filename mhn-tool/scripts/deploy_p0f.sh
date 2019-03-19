@@ -13,7 +13,7 @@ fi
 server_url=$1
 deploy_key=$2
 
-apt-get update
+#apt-get update
 apt-get -y install git supervisor libpcap-dev libjansson-dev gcc
 
 # install p0f
@@ -26,7 +26,7 @@ useradd -d /var/empty/p0f -M -r -s /bin/nologin p0f-user || true
 mkdir -p -m 755 /var/empty/p0f
 
 # Register the sensor with the MHN server.
-wget $server_url/static/registration.txt -O registration.sh
+sudo cp ~/mhn/server/mhn/static/registration.txt registration.sh
 chmod 755 registration.sh
 # Note: this will export the HPF_* variables
 . ./registration.sh $server_url $deploy_key "p0f"
