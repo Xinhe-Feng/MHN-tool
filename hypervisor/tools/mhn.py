@@ -1,37 +1,26 @@
-from ..exception import VMError, ServiceError
-from ..platforms.tool_connections import ManageSSH
-from ..data_types import SuccessState, PlatformTypes, ContextKeys, AnalyticsTarget
 import logging
-from logging import getLogger
-import json
 import time
+
+from ..exception import VMError, ServiceError, ConnectionError
+from ..data_types import AnalyticsTarget
+from .commons import Tools
 
 CKEY = AnalyticsTarget()
 
-class Mhn:
+class Mhn(Tools):
 
     def __init__(self):
+        super().__init__()
         self.log = logging.getLogger(__name__)
 
-    def docker_install(self, tool_id, tool_config, pl):
-        pass
-
-    def vm_install(self, tool_id, config, pl, platform_type):
-        tools_dir = pl.conf.TOOLS_DIR
-        ip = ""
+    def vm_install(self, config):
+        vm_conn = None
         try:
-            time.sleep(120)
-            vm_conn = None
-            ip = pl.get_tool_ip(tool_id)
-            #ip = "10.100.6.13"
-            if ip == "":
-                raise ServiceError(self.__class__.__name__,"%s - Ip address not available to connect. Cannot proceed with install - "%self.__class__.name__)
-
-            vm_conn = ManageSSH("recovery", "recovery", ip)
+            vm_conn = self.try_connection()
 
             command = "mkdir mhn"
             vm_conn.runCommandOverSSH(command)
-            vm_conn.copyFile("%s/mhn.tar.gz" %(tools_dir), "mhn.tar.gz")
+            vm_conn.copyFile("%s/mhn.tar.gz" %(self.tools_dir), "mhn.tar.gz")
             
             command = "tar -zxvf mhn.tar.gz"
             vm_conn.runCommandOverSSH(command)
@@ -42,12 +31,37 @@ class Mhn:
             command = "export LC_ALL=C"
             vm_conn.runCommandOverSSH(command)
 
-            command = "sudo ./mhn/install_mhn.sh"
+            command = "sudo python mhn/server/setupip.py" 
             outdata, error = vm_conn.runCommandOverSSH(command)
-           
+            
+          #  vm_conn.copyFile("%s/emerging.rules.tar.gz" %(self.tools_dir), "emerging.relus.tar.gz")
+            vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(self.tools_dir), "mhn_sensors.tar.gz")
+            
+            command = "sudo tar -zxvf mhn_sensors.tar.gz -C /opt"
+            vm_conn.runCommandOverSSH(command)
+            
+            command = "sudo cp -r /opt/mhn_sensors/. /opt"
+            vm_conn.runCommandOverSSH(command)
+
+            vm_conn.copyFile("%s/mhn_sensors_tmp.tar.gz" %(self.tools_dir), "mhn_sensors_tmp.tar.gz")
+
+            command = "sudo tar -zxvf mhn_sensors_tmp.tar.gz -C /tmp"
+            vm_conn.runCommandOverSSH(command)
+            
+            command = "sudo cp -r /tmp/mhn_sensors_tmp/. /tmp"     
+            vm_conn.runCommandOverSSH(command)
+
+            command = "sudo ./mhn/install_mhn.sh"
+            vm_conn.runCommandOverSSH(command)
+        
+            command = "sudo python mhn/deploy.py"
+            outdata, error = vm_conn.runCommandOverSSH(command)
+
+
         except VMError as e:
             self.log.error("%s - Unable to get ip address of the tool: %s - " %(self.__class__.__name__,str(e)))
             raise ServiceError(self.__class__.__name__, "%s - Unable to get ip address of the tool - %s - "%(self.__class__.__name__,str(e)))
+
 
         except ConnectionError as e:
             self.log.info("%s - Error during SSH operations: %s - " %(self.__class__.__name__, str(e)))
@@ -55,23 +69,17 @@ class Mhn:
         finally:
             if(vm_conn is not None):
                 vm_conn.closeSSHConnection()
-        self.log.info("%s - installed on ip - %s - %s - %s - " %(self.__class__.__name__,ip, outdata, error))
-        return ip
+        self.log.info("%s - installed on ip - %s " %(self.__class__.__name__,self.IP))
+        
 
-    def tool_update(self,tool_id,config,pl, platform_type):
-        tools_dir = pl.conf.TOOLS_DIR
-        ip = ""
+    def vm_update(self, config):
+        vm_conn = None
         try:
             time.sleep(120)
-            vm_conn = None
-            ip = pl.get_tool_ip(tool_id)
-            #ip = "10.100.6.13"
-            if ip == "":
-                raise ServiceError(self.__class__.__name__,"%s - Ip address not available to connect. Cannot proceed with install - "%self.__class__.name__)
 
-            vm_conn = ManageSSH("recovery", "recovery", ip)
+            vm_conn = self.try_connection()
             
-            vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(tools_dir), "mhn_sensors.tar.gz")
+            vm_conn.copyFile("%s/mhn_sensors.tar.gz" %(self.tools_dir), "mhn_sensors.tar.gz")
            
             command = "sudo tar -zxvf mhn_sensors.tar.gz -C /opt"
             vm_conn.runCommandOverSSH(command)
@@ -80,7 +88,7 @@ class Mhn:
             vm_conn.runCommandOverSSH(command)
             
             
-            vm_conn.copyFile("%s/mhn_sensors_tmp.tar.gz" %(tools_dir), "mhn_sensors_tmp.tar.gz")
+            vm_conn.copyFile("%s/mhn_sensors_tmp.tar.gz" %(self.tools_dir), "mhn_sensors_tmp.tar.gz")
             
             command = "sudo tar -zxvf mhn_sensors_tmp.tar.gz -C /tmp"
             vm_conn.runCommandOverSSH(command)
@@ -102,66 +110,17 @@ class Mhn:
         finally:
             if(vm_conn is not None):
                 vm_conn.closeSSHConnection()
-                self.log.info("%s - installed on ip - %s - %s - %s - " %(self.__class__.__name__,ip, outdata, error))
-                return ip
+                self.log.info("%s - installed on ip - %s " %(self.__class__.__name__,self.IP))
+            
 
-
-    def update(self,tool_id, config, pl, platform_type):
-        try:
-            self.init_update = -1
-            if(platform_type == PlatformTypes.VM):
-                return self.tool_update(tool_id, config, pl, platform_type)
-            elif(platform_type == PlatformTypes.DOCKER):
-                return self.docker_install(tool_id, config, pl, platform_type)
-        except:
-            raise
-
-    def install(self, tool_id, config, pl, platform_type):
-        try:
-            self.init_update = 0
-            if (platform_type == PlatformTypes.VM):
-                return self.vm_install(tool_id, config, pl, platform_type)
-            elif (platform_type == PlatformTypes.DOCKER):
-                return self.docker_install(tool_id, config, pl, platform_type)
-        except:
-            raise
-
-    def getServiceSpec(self, ip, tool_id, platform_type):
-        vm_conn = None
-        try:
-            self.log.info("%s - using ip - %s" %(self.__class__.__name__,ip))
-            vm_conn = ManageSSH("recovery", "recovery", ip)
-            service_spec = vm_conn.readRemoteJsonFile("spec.json")
-            return service_spec
-        except ConnectionError as e:
-            self.log.error("%s - Error during SSH operations: %s - " %(self.__class__.__name__, str(e)))
-            raise ServiceError(self.__class__.__name__, "%s - Error during SSH operations: %s - "%(self.__class__.__name__,str(e)))
-
-        except json.decoder.JSONDecodeError as e:
-            self.log.error("%s - Error in reading json spec file: %s - " %(self.__class__.__name__, str(e)))
-            raise ServiceError(self.__class__.__name__, "%s - Error in reading json spec file: %s - "%(self.__class__.__name__,str(e)))
-        finally:
-            if(vm_conn is not None):
-                vm_conn.closeSSHConnection()
-           
-    def getStatus(self, tool_id, pl, platform_type):
-        vm_conn = None
-        try:
-            ip = pl.get_tool_ip(tool_id)
-            if ip == "":
-                raise ServiceError(platform_type,"%s - Ip address not available to connect. Cannot proceed with install - "%(self.__class__.__name__))
-            vm_conn = ManageSSH("recovery", "recovery", ip)
-            wireshark_status = vm_conn.readRemoteJsonFile("mhn_installed")
-            return wireshark_status
-        except VMError as e:
-            self.log.error("%s - Unable to get ip address of the tool: %s - " %(self.__class__.__name__, str(e)))
-            raise ServiceError(self.__class__.__name__, "%s - Unable to get ip address of the tool: %s - "%(self.__class__.__name__, str(e)))
-        except ConnectionError as e:
-            self.log.error("%s - Error during SSH operations: %s - " %(self.__class__.__name__, str(e)))
-            raise ServiceError(self.__class__.__name__, "%s - Error during SSH operations: %s - "%(self.__class__.__name__, str(e)))
-        except json.decoder.JSONDecodeError as e:
-            self.log.error("%s - Error in reading json status file: %s - " %(self.__class__.__name__, str(e)))
-            raise ServiceError(self.__class__.__name__, "%s - Error in reading json status file: %s - "%(self.__class__.__name__, str(e)))
-        finally:
-            if(vm_conn is not None):
-                vm_conn.closeSSHConnection()
+    def getServiceSpec(self):
+        try:     
+            self.get_service_spec("./mhn/server/mhn_spec.json")
+        except ServiceError:
+             raise
+         
+    def getStatus(self, platform_type):
+         try:
+             return self.get_service_status(platform_type, "./mhn/server/mhn_spec.json")
+         except ServiceError:
+             raise

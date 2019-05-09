@@ -4,7 +4,7 @@
 # i386 and x64 architecture distros both
 #
 
-INTERFACE=eth0
+INTERFACE=eth1
 
 set -e
 set -x

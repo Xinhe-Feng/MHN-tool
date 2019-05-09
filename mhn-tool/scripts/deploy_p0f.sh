@@ -43,5 +43,5 @@ redirect_stderr=true
 stopsignal=TERM
 environment=HPFEEDS_HOST="$HPF_HOST",HPFEEDS_PORT="$HPF_PORT",HPFEEDS_CHANNEL="p0f.events",HPFEEDS_IDENT="$HPF_IDENT",HPFEEDS_SECRET="$HPF_SECRET"
 EOF
-
+sed -i 's/INTERFACE=eth0/INTERFACE=eth1/' /opt/p0f/p0f_wrapper.sh
 supervisorctl update

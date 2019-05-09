@@ -74,9 +74,9 @@ sed -i 's/#debug=false/debug=false/' cowrie.cfg
 cd ..
 
 chown -R cowrie:users /opt/cowrie/
-touch /etc/authbind/byport/22
-chown cowrie /etc/authbind/byport/22
-chmod 770 /etc/authbind/byport/22
+touch /etc/authbind/byport/2222
+chown cowrie /etc/authbind/byport/2222
+chmod 770 /etc/authbind/byport/2222
 
 # start.sh is deprecated on new Cowrie version and substituted by "bin/cowrie [start/stop/status]"
 sed -i 's/AUTHBIND_ENABLED=no/AUTHBIND_ENABLED=yes/' bin/cowrie

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INTERFACE=eth0
+INTERFACE=eth1
 
 set -e
 set -x

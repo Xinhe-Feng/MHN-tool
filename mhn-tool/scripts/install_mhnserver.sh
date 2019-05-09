@@ -76,9 +76,19 @@ mkdir -p /etc/nginx
 if [ $OS == "Debian" ]; then
     mkdir -p /etc/nginx/sites-available
     mkdir -p /etc/nginx/sites-enabled
+ #   rm /etc/nginx/sites-available/80-http
+ #   rm /etc/nginx/sites-available/443-gui
+ #   rm /etc/nginx/sites-available/8443-api
+ #   rm /etc/nginx/sites-available/floodlight-ssl-cpsec
+ #   rm /etc/nginx/sites-enabled/80-http
+ #   rm /etc/nginx/sites-enabled/443-gui
+ #   rm /etc/nginx/sites-enabled/8443-api
+ #   rm /etc/nginx/sites-enabled/floodlight-ssl-cpsec
+#    NGINXCONFIG=/etc/nginx/sites-available/80-http
     NGINXCONFIG=/etc/nginx/sites-available/default
     touch $NGINXCONFIG
     ln -fs /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+#    ln -fs /etc/nginx/sites-available/80-http /etc/nginx/sites-enabled/80-http
     NGINXUG='www-data:www-data'
     NGINXUSER='www-data'
 
@@ -90,10 +100,9 @@ fi
 
 cat > $NGINXCONFIG <<EOF
 server {
-    listen       80;
-    server_name  _;
-    
-    location / { 
+   listen       80;
+      server_name  _;
+   location / { 
         try_files \$uri @mhnserver; 
     }
     
